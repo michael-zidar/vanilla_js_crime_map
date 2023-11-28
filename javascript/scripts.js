@@ -1,9 +1,6 @@
 const btnGetData = document.getElementById("btnGetData")
-
 const inpDateFrom = document.getElementById("inpDateFrom")
-
 const inpDateTo = document.getElementById("inpDateTo")
-
 const selDistrict = document.getElementById("selDistrict")
 
 let today = new Date()
@@ -29,25 +26,61 @@ inpDateTo.value = initalTo
 
 btnGetData.addEventListener("click", getData)
 
-let map = L.map('map').setView([39.1133, -84.519], 10);
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map)
-
 let crimeLayer = L.layerGroup().addTo(map)
 
-function convertDate(date) {
-    let newDate = new Date(date)
-    let month = newDate.getMonth() + 1
-    let day = newDate.getDate()
-    let year = newDate.getFullYear()
-    return month + "/" + day + "/" + year
+let cpd_schema = {
+    "fields": [{
+            "name": "cpd_neighborhood",
+            "alias": "CPD Neighborhood",
+            "transformFunction": false
+        },
+        {
+            "name": "district",
+            "alias": "District",
+            "transformFunction": false
+        },
+        {
+            "name": "age",
+            "alias": "Age",
+            "transformFunction": false
+        },
+        {
+            "name": "race",
+            "alias": "Race",
+            "transformFunction": false
+        },
+        {
+            "name": "sex",
+            "alias": "Sex",
+            "transformFunction": false
+        },
+        {
+            "name": "type",
+            "alias": "Type",
+            "transformFunction": false
+        },
+        {
+            "name": "latitude_x",
+            "alias": "Latitude",
+            "transformFunction": truncateLatOrLon
+        },
+        {
+            "name": "longitude_x",
+            "alias": "Longitude",
+            "transformFunction": truncateLatOrLon
+        },
+        {
+            "name": "dateoccurred",
+            "alias": "Date",
+            "transformFunction": convertDate
+        }
+    ]
 }
 
 function getData() {
     console.log("getData() called")
+    btnGetData.disabled = true
+
     // remove all markers from map
     crimeLayer.clearLayers()
 
@@ -105,102 +138,47 @@ function getData() {
                 }
             }).addTo(crimeLayer)
 
-            let table = `
-            <table class="table table-responsive">
-                <tr>
-                    <th>Neighborhood</th>
-                    <th>District</th>
-                    <th>Age</th>
-                    <th>Race</th>
-                    <th>Sex</th>
-                    <th>Type</th>
-                    <th>Date</th>
-                    <th>Lat</th>
-                    <th>Lon</th>
-                </tr>
-            `
-            data.forEach(function (item) {
-                table += `<tr>
-                            <td>${item.cpd_neighborhood}</td>
-                            <td>${item.district}</td>
-                            <td>${item.age}</td>
-                            <td>${item.race}</td>
-                            <td>${item.sex}</td>
-                            <td>${item.type}</td>
-                            <td>${convertDate(item.dateoccurred)}</td>
-                            <td>${item.latitude_x}</td>
-                            <td>${item.longitude_x}</td>
-                        </tr>`
-            })
+            // let table = `
+            // <table class="">
+            //     <tr>
+            //         <th>Neighborhood</th>
+            //         <th>District</th>
+            //         <th>Age</th>
+            //         <th>Race</th>
+            //         <th>Sex</th>
+            //         <th>Type</th>
+            //         <th>Date</th>
+            //         <th>Lat</th>
+            //         <th>Lon</th>
+            //     </tr>
+            // `
+            // data.forEach(function (item) {
+            //     table += `<tr>
+            //                 <td>${item.cpd_neighborhood}</td>
+            //                 <td>${item.district}</td>
+            //                 <td>${item.age}</td>
+            //                 <td>${item.race}</td>
+            //                 <td>${item.sex}</td>
+            //                 <td>${item.type}</td>
+            //                 <td>${convertDate(item.dateoccurred)}</td>
+            //                 <td>${item.latitude_x}</td>
+            //                 <td>${item.longitude_x}</td>
+            //             </tr>`
+            // })
             let title = `<h2>Cincinnati Shootings ${districtText} -  ${victimCount} Victims Between ${dateFrom} and ${dateTo}</h2>`
 
-            table += `</table>`
+            // table += `</table>`
+
+            let table = createOutputTable(data, cpd_schema)
 
             let btnDownload = `<button class="btn btn-primary" onclick="tableToCSVDownload()">Download CSV</button>`
 
-            let output = title + btnDownload + table
+            let output = title + btnDownload 
             document.getElementById("output").innerHTML = output
+            document.getElementById("output").appendChild(table)
+            btnGetData.disabled = false
         })
-
-
-    
 }
 
-function tableToCSVDownload(table) {
-    let csv = []
-    let rows = document.querySelectorAll("table tr")
-
-    for (let i = 0; i < rows.length; i++) {
-        let row = []
-        let cols = rows[i].querySelectorAll("td, th")
-
-        for (let j = 0; j < cols.length; j++) {
-            row.push(cols[j].innerText)
-        }
-
-        csv.push(row.join(","))
-    }
-
-    // Download CSV file
-    downloadCSV(csv.join("\n"), "shootings.csv")
-}
-
-function downloadCSV(csv, filename) {
-    let csvFile
-    let downloadLink
-
-    // CSV file
-    csvFile = new Blob([csv], { type: "text/csv" })
-
-    // Download link
-    downloadLink = document.createElement("a")
-
-    // File name
-    downloadLink.download = filename
-
-    // Create a link to the file
-    downloadLink.href = window.URL.createObjectURL(csvFile)
-
-    // Hide download link
-    downloadLink.style.display = "none"
-
-    // Add the link to DOM
-    document.body.appendChild(downloadLink)
-
-    // Click download link
-    downloadLink.click()
-}
-
-function convertJsonToGeoJson(jsonData, latField, lonField) {
-    return {
-        type: "FeatureCollection",
-        features: jsonData.map(item => ({
-            type: "Feature",
-            properties: item, // include all properties
-            geometry: {
-                type: "Point",
-                coordinates: [item[lonField], item[latField]]
-            }
-        }))
-    };
-}
+// when the page loads, call getData()
+//getData()
