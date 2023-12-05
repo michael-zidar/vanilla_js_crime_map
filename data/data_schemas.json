@@ -1,0 +1,287 @@
+{
+    "cincinnati_shootings": {
+        "url": "https://data.cincinnati-oh.gov/Safer-Streets/CPD-Shootings/7a3r-kxji",
+        "name": "cpd_shootings",
+        "alias": "Cincinnati Shootings",
+        "description": "Cincinnati Police Department Shootings",
+        "response_type": "json",
+        "unit_of_analysis": "shootings victims",
+        "date_field": "dateoccurred",
+        "default_time_period_in_days": "28",
+        "geo_field": {
+            "name": "district",
+            "alias": "District",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "District One"
+                },
+                {
+                    "value": "2",
+                    "label": "District Two"
+                },
+                {
+                    "value": "3",
+                    "label": "District Three"
+                },
+                {
+                    "value": "4",
+                    "label": "District Four"
+                }
+            ]
+        },
+        "geography": "latitude_x,longitude_x",
+        "api_url": "https://data.cincinnati-oh.gov/resource/7a3r-kxji.json?$$app_token=OI2ltoaHNgdRxAT3DNxIPt77j",
+        "api_default_query": "&$query=SELECT cpd_neighborhood, district, age, race, sex, type, latitude_x, longitude_x, dateoccurred, inclocation_x, rms_no WHERE",
+        "popup_template": "<h3>{cpd_neighborhood}</h3><p>{type}</p><p>{dateoccurred}</p><p>{inclocation_x}</p><p>{age} {race} {sex}</p>",
+        "fields": [
+            {
+                "name": "cpd_neighborhood",
+                "alias": "CPD Neighborhood",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "district",
+                "alias": "District",
+                "visible_by_default": false,
+                "transformFunction": false
+            },
+            {
+                "name": "inclocation_x",
+                "alias": "Incident Location",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "rms_no",
+                "alias": "Case Number",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "age",
+                "alias": "Age",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "race",
+                "alias": "Race",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "sex",
+                "alias": "Sex",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "type",
+                "alias": "Type",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "latitude_x",
+                "alias": "Latitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon"
+            },
+            {
+                "name": "longitude_x",
+                "alias": "Longitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon"
+            },
+            {
+                "name": "dateoccurred",
+                "alias": "Date",
+                "visible_by_default": true,
+                "transformFunction": "convertDate"
+            }
+        ]
+    },
+    "cincinnati_collision": {
+        "url": "https://data.cincinnati-oh.gov/safety/Traffic-Crash-Reports-CPD-/rvmt-pkmq",
+        "name": "cpd_collision",
+        "alias": "Cincinnati Collision",
+        "description": "Cincinnati Police Department Traffic Collisions",
+        "response_type": "json",
+        "unit_of_analysis": "traffic collisions",
+        "date_field": "crashdate",
+        "default_time_period_in_days": "7",
+        "geo_fields": false,
+        "geo_field": "cpd_neighborhood",
+        "geography": "latitude_x,longitude_x",
+        "api_url": "https://data.cincinnati-oh.gov/resource/rvmt-pkmq.json?$$app_token=OI2ltoaHNgdRxAT3DNxIPt77j",
+        "api_default_query": "&$query=SELECT cpd_neighborhood, crashseverity, latitude_x, longitude_x, crashdate, address_x WHERE",
+        "popup_template": "<h3>{cpd_neighborhood}</h3> <p>{crashseverity}</p> <p>{crashdate}</p> <p>{address_x}</p>",
+        "fields": [
+            {
+                "name": "cpd_neighborhood",
+                "alias": "CPD Neighborhood",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "crashseverity",
+                "alias": "Crash Severity",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "latitude_x",
+                "alias": "Latitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon"
+            },
+            {
+                "name": "longitude_x",
+                "alias": "Longitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon"
+            },
+            {
+                "name": "crashdate",
+                "alias": "Date",
+                "visible_by_default": true,
+                "transformFunction": "convertDate"
+            },
+            {
+                "name": "address_x",
+                "alias": "Address",
+                "visible_by_default": true,
+                "transformFunction": false
+            }
+        ]
+    },
+    "cincinnati_crime": {
+        "url": "https://data.cincinnati-oh.gov/Safer-Streets/CPD-Incidents/wvte-d7nf",
+        "name": "cpd_crime",
+        "alias": "Cincinnati Crime",
+        "description": "Cincinnati Police Department Crime Reports",
+        "response_type": "json",
+        "unit_of_analysis": "crime reports",
+        "date_field": "date_reported",
+        "default_time_period_in_days": "28",
+        "geo_field": false,
+        "geography": "latitude_x,longitude_x",
+        "api_url": "https://data.cincinnati-oh.gov/resource/k59e-2pvf.json?$$app_token=OI2ltoaHNgdRxAT3DNxIPt77j",
+        "api_default_query": "&$query=SELECT cpd_neighborhood, latitude_x, longitude_x, date_reported, address_x, offense WHERE",
+        "popup_template": "<h3>{cpd_neighborhood}</h3> <p>{offense}</p> <p>{date_reported}</p> <p>{address_x}</p>",
+        "fields": [
+            {
+                "name": "cpd_neighborhood",
+                "alias": "CPD Neighborhood",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "latitude_x",
+                "alias": "Latitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon"
+            },
+            {
+                "name": "longitude_x",
+                "alias": "Longitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon"
+            },
+            {
+                "name": "date_reported",
+                "alias": "Date Reported",
+                "visible_by_default": true,
+                "transformFunction": "convertDate"
+            },
+            {
+                "name": "address_x",
+                "alias": "Address",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "offense",
+                "alias": "Offense",
+                "visible_by_default": true,
+                "transformFunction": false
+            }
+        ]
+    },
+    "dallas_crime": {
+        "url": "https://www.dallasopendata.com/Public-Safety/Police-Incidents/qv6i-rri7",
+        "name": "dallas_crime",
+        "alias": "Dallas Crime",
+        "description": "Dallas Police Department Crime Reports",
+        "response_type": "json",
+        "unit_of_analysis": "crime reports",
+        "date_field": "reporteddate",
+        "default_time_period_in_days": "3",
+        "geo_field": false,
+        "combined_geo_fields": "geocoded_column",
+        "geography": "latitude,longitude",
+        "api_url": "https://www.dallasopendata.com/resource/qv6i-rri7.json",
+        "api_default_query": "?$query=SELECT incidentnum, reporteddate, incident_address, nibrs_crime, nibrs_code, nibrs_crimeagainst, geocoded_column WHERE",
+        "popup_template": "<h3>{nibrs_crime}</h3> <p>{reporteddate}</p> <p>{incident_address}</p>",
+        "fields": [
+            {
+                "name": "incidentnum",
+                "alias": "Incident Number",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "incident_address",
+                "alias": "Incident Address",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "reporteddate",
+                "alias": "Date Reported",
+                "visible_by_default": true,
+                "transformFunction": "convertDate"
+            },
+            {
+                "name": "nibrs_crime",
+                "alias": "NIBRS Crime",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "nibrs_code",
+                "alias": "NIBRS Code",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "nibrs_crimeagainst",
+                "alias": "NIBRS Category",
+                "visible_by_default": true,
+                "transformFunction": false
+            },
+            {
+                "name": "latitude",
+                "alias": "Latitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon",
+                "geo_value": "latitude"
+            },
+            {
+                "name": "longitude",
+                "alias": "Longitude",
+                "visible_by_default": false,
+                "transformFunction": "truncateLatOrLon",
+                "geo_value": "longitude"
+            },
+            {
+                "name": "human_address",
+                "alias": "Human Address",
+                "visible_by_default": false,
+                "transformFunction": false
+            }
+        ]
+    }
+}
